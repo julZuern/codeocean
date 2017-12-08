@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170920145852) do
+ActiveRecord::Schema.define(version: 20171120153705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,30 @@ ActiveRecord::Schema.define(version: 20170920145852) do
     t.datetime "updated_at"
     t.string   "oauth_key",    limit: 255
     t.string   "oauth_secret", limit: 255
+  end
+
+  create_table "error_template_attributes", force: :cascade do |t|
+    t.string   "key"
+    t.string   "regex"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.text     "description"
+    t.boolean  "important"
+  end
+
+  create_table "error_template_attributes_templates", id: false, force: :cascade do |t|
+    t.integer "error_template_id",           null: false
+    t.integer "error_template_attribute_id", null: false
+  end
+
+  create_table "error_templates", force: :cascade do |t|
+    t.integer  "execution_environment_id"
+    t.string   "name"
+    t.string   "signature"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.text     "description"
+    t.text     "hint"
   end
 
   create_table "errors", force: :cascade do |t|
@@ -99,19 +123,18 @@ ActiveRecord::Schema.define(version: 20170920145852) do
   create_table "exercises", force: :cascade do |t|
     t.text     "description"
     t.integer  "execution_environment_id"
-    t.string   "title",                     limit: 255
+    t.string   "title",                    limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "instructions"
     t.boolean  "public"
-    t.string   "user_type",                 limit: 255
-    t.string   "token",                     limit: 255
+    t.string   "user_type",                limit: 255
+    t.string   "token",                    limit: 255
     t.boolean  "hide_file_tree"
     t.boolean  "allow_file_creation"
-    t.boolean  "allow_auto_completion",                 default: false
-    t.integer  "expected_worktime_seconds",             default: 60
-    t.integer  "expected_difficulty",                   default: 1
+    t.boolean  "allow_auto_completion",                default: false
+    t.integer  "expected_difficulty",                  default: 1
   end
 
   create_table "exercises_proxy_exercises", id: false, force: :cascade do |t|
@@ -268,6 +291,22 @@ ActiveRecord::Schema.define(version: 20170920145852) do
     t.datetime "updated_at"
   end
 
+  create_table "structured_error_attributes", force: :cascade do |t|
+    t.integer  "structured_error_id"
+    t.integer  "error_template_attribute_id"
+    t.string   "value"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "match"
+  end
+
+  create_table "structured_errors", force: :cascade do |t|
+    t.integer  "error_template_id"
+    t.integer  "file_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
   create_table "submissions", force: :cascade do |t|
     t.integer  "exercise_id"
     t.float    "score"
@@ -308,13 +347,15 @@ ActiveRecord::Schema.define(version: 20170920145852) do
   end
 
   create_table "user_exercise_feedbacks", force: :cascade do |t|
-    t.integer "exercise_id",             null: false
-    t.integer "user_id",                 null: false
-    t.string  "user_type",               null: false
-    t.integer "difficulty"
-    t.integer "working_time_seconds"
-    t.string  "feedback_text"
-    t.integer "user_estimated_worktime"
+    t.integer  "exercise_id",                                             null: false
+    t.integer  "user_id",                                                 null: false
+    t.string   "user_type",                                               null: false
+    t.integer  "difficulty"
+    t.integer  "working_time_seconds"
+    t.string   "feedback_text"
+    t.integer  "user_estimated_worktime"
+    t.datetime "created_at",              default: '2017-11-20 18:20:25', null: false
+    t.datetime "updated_at",              default: '2017-11-20 18:20:25', null: false
   end
 
   create_table "user_exercise_interventions", force: :cascade do |t|
