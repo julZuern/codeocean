@@ -94,3 +94,44 @@ a.file-heading {
   top: 100%;
   left: 0;
 }
+
+.feedback-page {
+  .header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .value {
+    border: 1px solid grey;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  .no-feedback {
+    font-weight: bold;
+    margin-top: 50px;
+  }
+
+  .feedback-header {
+    display: flex;
+
+    .username {
+      flex-grow: 1;
+      font-weight: bold;
+    }
+
+    .date {}
+  }
+
+  .feedback {
+    .text {
+      margin-bottom: 10px;
+    }
+    .difficulty {
+      font-weight: bold;
+    }
+    .worktime {
+      font-weight: bold;
+    }
+  }
+}
