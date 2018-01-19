@@ -355,8 +355,8 @@ ActiveRecord::Schema.define(version: 20171207091951) do
     t.integer  "working_time_seconds"
     t.string   "feedback_text"
     t.integer  "user_estimated_worktime"
-    t.datetime "created_at",              default: '2017-11-20 18:20:25', null: false
-    t.datetime "updated_at",              default: '2017-11-20 18:20:25', null: false
+    t.datetime "created_at",              default: '2018-01-19 09:14:19', null: false
+    t.datetime "updated_at",              default: '2018-01-19 09:14:19', null: false
   end
 
   create_table "user_exercise_interventions", force: :cascade do |t|
