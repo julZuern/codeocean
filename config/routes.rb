@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     end
 
     member do
+      post :push_proforma_xml
       post :clone
       get :implement
       get :working_times

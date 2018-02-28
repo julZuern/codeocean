@@ -2,6 +2,7 @@ de:
   activerecord:
     attributes:
       code_harbor_link:
+        push_url: Push URL
         oauth2token: OAuth2 Token
       consumer:
         name: Name
@@ -358,6 +359,15 @@ de:
         tests: Unit Tests
         time_difference: 'Arbeitszeit bis hier*'
         addendum: '* Differenzen von mehr als 30 Minuten werden ignoriert.'
+    push_proforma_xml:
+      button: "Übung exportieren"
+      notice: "Übung exportiert nach %{link}"
+    import_proforma_xml:
+      success: "Übung wurde erfolgreich exportiert"
+      invalid: "Ungültige Übung"
+      no_header: "Authorization header fehlt"
+      no_token: "Kein Token im Authorization header"
+      unknown_token: "Unbekanntes OAuth2 Token"
   proxy_exercises:
       index:
         clone: Duplizieren

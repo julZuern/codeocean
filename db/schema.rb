@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20180222145909) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.string   "push_url"
   end
 
   add_index "code_harbor_links", ["user_id"], name: "index_code_harbor_links_on_user_id", using: :btree
