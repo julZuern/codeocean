@@ -8,7 +8,15 @@ module SubmissionScoring
         output = execute_test_file(file, submission)
         assessment = assessor.assess(output)
         passed = ((assessment[:passed] == assessment[:count]) and (assessment[:score] > 0))
-        testrun_output = passed ? nil : output[:stderr]
+        testrun_output = passed ? nil : 'message: ' + output[:message].to_s + "\n stdout: " + output[:stdout].to_s + "\n stderr: " + output[:stderr].to_s
+        unless testrun_output.blank?
+          submission.exercise.execution_environment.error_templates.each do |template|
+            pattern = Regexp.new(template.signature).freeze
+            if pattern.match(testrun_output)
+              StructuredError.create_from_template(template, testrun_output)
+            end
+          end
+        end
         Testrun.new(submission: submission, cause: 'assess', file: file, passed: passed, output: testrun_output).save
         output.merge!(assessment)
         output.merge!(filename: file.name_with_extension, message: feedback_message(file, output[:score]), weight: file.weight)
@@ -39,6 +47,14 @@ module SubmissionScoring
       end
     end
     submission.update(score: score)
+    if submission.normalized_score == 1.0
+      Thread.new do
+        RequestForComment.where(exercise_id: submission.exercise_id, user_id: submission.user_id, user_type: submission.user_type).each{ |rfc|
+          rfc.full_score_reached = true
+          rfc.save
+        }
+      end
+    end
     outputs
   end
 end

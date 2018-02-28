@@ -8,6 +8,7 @@ class Submission < ActiveRecord::Base
   belongs_to :exercise
 
   has_many :testruns
+  has_many :structured_errors
   has_many :comments, through: :files
 
   delegate :execution_environment, to: :exercise
@@ -17,6 +18,8 @@ class Submission < ActiveRecord::Base
 
   validates :cause, inclusion: {in: CAUSES}
   validates :exercise_id, presence: true
+
+  MAX_COMMENTS_ON_RECOMMENDED_RFC = 5
 
   def build_files_hash(files, attribute)
     files.map(&attribute.to_proc).zip(files).to_h
@@ -52,5 +55,17 @@ class Submission < ActiveRecord::Base
 
   def to_s
     Submission.model_name.human
+  end
+
+  def redirect_to_feedback?
+    ((user_id + exercise.created_at.to_i) % 10 == 1) && exercise.needs_more_feedback?
+  end
+
+  def own_unsolved_rfc
+    RequestForComment.unsolved.where(exercise_id: exercise, user_id: user_id).first
+  end
+
+  def unsolved_rfc
+    RequestForComment.unsolved.where(exercise_id: exercise).where.not(question: nil).order("RANDOM()").find { | rfc_element |(rfc_element.comments_count < MAX_COMMENTS_ON_RECOMMENDED_RFC) }
   end
 end

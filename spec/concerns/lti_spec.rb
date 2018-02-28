@@ -11,7 +11,7 @@ describe Lti do
   describe '#build_tool_provider' do
     it 'instantiates a tool provider' do
       expect(IMS::LTI::ToolProvider).to receive(:new)
-      controller.send(:build_tool_provider, consumer: FactoryGirl.build(:consumer), parameters: {})
+      controller.send(:build_tool_provider, consumer: FactoryBot.build(:consumer), parameters: {})
     end
   end
 
@@ -25,31 +25,23 @@ describe Lti do
 
   describe '#external_user_name' do
     let(:first_name) { 'Jane' }
-    let(:full_name) { 'John Doe' }
     let(:last_name) { 'Doe' }
+    let(:full_name) { 'John Doe' }
     let(:provider) { double }
+    let(:provider_full) { double(:lis_person_name_full => full_name) }
 
     context 'when a full name is provided' do
       it 'returns the full name' do
-        expect(provider).to receive(:lis_person_name_full).twice.and_return(full_name)
-        expect(controller.send(:external_user_name, provider)).to eq(full_name)
-      end
-    end
-
-    context 'when first and last name are provided' do
-      it 'returns the concatenated names' do
-        expect(provider).to receive(:lis_person_name_full)
-        expect(provider).to receive(:lis_person_name_given).twice.and_return(first_name)
-        expect(provider).to receive(:lis_person_name_family).twice.and_return(last_name)
-        expect(controller.send(:external_user_name, provider)).to eq("#{first_name} #{last_name}")
+        expect(provider_full).to receive(:lis_person_name_full).twice.and_return(full_name)
+        expect(controller.send(:external_user_name, provider_full)).to eq(full_name)
       end
     end
 
     context 'when only partial information is provided' do
       it 'returns the first available name' do
         expect(provider).to receive(:lis_person_name_full)
-        expect(provider).to receive(:lis_person_name_given).twice.and_return(first_name)
-        expect(provider).to receive(:lis_person_name_family)
+        expect(provider).to receive(:lis_person_name_given).and_return(first_name)
+        expect(provider).not_to receive(:lis_person_name_family)
         expect(controller.send(:external_user_name, provider)).to eq(first_name)
       end
     end
@@ -103,10 +95,10 @@ describe Lti do
   end
 
   describe '#send_score' do
-    let(:consumer) { FactoryGirl.create(:consumer) }
+    let(:consumer) { FactoryBot.create(:consumer) }
     let(:score) { 0.5 }
-    let(:submission) { FactoryGirl.create(:submission) }
-    let!(:lti_parameter) { FactoryGirl.create(:lti_parameter)}
+    let(:submission) { FactoryBot.create(:submission) }
+    let!(:lti_parameter) { FactoryBot.create(:lti_parameter, consumers_id: consumer.id, external_users_id: submission.user_id, exercises_id: submission.exercise_id)}
 
     context 'with an invalid score' do
       it 'raises an exception' do
@@ -164,18 +156,18 @@ describe Lti do
     let(:parameters) { {} }
 
     it 'stores data in the session' do
-      controller.instance_variable_set(:@current_user, FactoryGirl.create(:external_user))
-      controller.instance_variable_set(:@exercise, FactoryGirl.create(:fibonacci))
+      controller.instance_variable_set(:@current_user, FactoryBot.create(:external_user))
+      controller.instance_variable_set(:@exercise, FactoryBot.create(:fibonacci))
       expect(controller.session).to receive(:[]=).with(:consumer_id, anything)
       expect(controller.session).to receive(:[]=).with(:external_user_id, anything)
-      controller.send(:store_lti_session_data, consumer: FactoryGirl.build(:consumer), parameters: parameters)
+      controller.send(:store_lti_session_data, consumer: FactoryBot.build(:consumer), parameters: parameters)
     end
 
     it 'it creates an LtiParameter Object' do
       before_count = LtiParameter.count
-      controller.instance_variable_set(:@current_user, FactoryGirl.create(:external_user))
-      controller.instance_variable_set(:@exercise, FactoryGirl.create(:fibonacci))
-      controller.send(:store_lti_session_data, consumer: FactoryGirl.build(:consumer), parameters: parameters)
+      controller.instance_variable_set(:@current_user, FactoryBot.create(:external_user))
+      controller.instance_variable_set(:@exercise, FactoryBot.create(:fibonacci))
+      controller.send(:store_lti_session_data, consumer: FactoryBot.build(:consumer), parameters: parameters)
       expect(LtiParameter.count).to eq(before_count + 1)
     end
   end

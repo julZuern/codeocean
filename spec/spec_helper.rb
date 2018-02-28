@@ -16,13 +16,8 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 unless RUBY_PLATFORM == 'java'
-  if ENV['CODECLIMATE_REPO_TOKEN']
-    require 'codeclimate-test-reporter'
-    CodeClimate::TestReporter.start
-  else
     require 'simplecov'
     SimpleCov.start('rails')
-  end
 end
 
 RSpec.configure do |config|
@@ -82,4 +77,7 @@ RSpec.configure do |config|
     # a real object. This is generally recommended.
     mocks.verify_partial_doubles = true
   end
+
+  # Save test results to persistence file to enable usage of --next-failure flag in local testing/debugging
+  config.example_status_persistence_file_path = 'tmp/rspec_persistence_file.txt'
 end

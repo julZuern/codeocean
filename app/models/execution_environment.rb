@@ -11,6 +11,7 @@ class ExecutionEnvironment < ActiveRecord::Base
   has_many :exercises
   belongs_to :file_type
   has_many :hints
+  has_many :error_templates
 
   scope :with_exercises, -> { where('id IN (SELECT execution_environment_id FROM exercises)') }
 
@@ -46,7 +47,7 @@ class ExecutionEnvironment < ActiveRecord::Base
   private :validate_docker_image?
 
   def working_docker_image?
-    DockerClient.pull(docker_image) unless DockerClient.image_tags.include?(docker_image)
+    DockerClient.pull(docker_image) unless DockerClient.find_image_by_tag(docker_image).blank?
     output = DockerClient.new(execution_environment: self).execute_arbitrary_command(VALIDATION_COMMAND)
     errors.add(:docker_image, "error: #{output[:stderr]}") if output[:stderr].present?
   rescue DockerClient::Error => error
