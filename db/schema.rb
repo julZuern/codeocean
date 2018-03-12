@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180222145909) do
+ActiveRecord::Schema.define(version: 20180312135814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,18 +124,19 @@ ActiveRecord::Schema.define(version: 20180222145909) do
   create_table "exercises", force: :cascade do |t|
     t.text     "description"
     t.integer  "execution_environment_id"
-    t.string   "title",                    limit: 255
+    t.string   "title",                         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
     t.text     "instructions"
     t.boolean  "public"
-    t.string   "user_type",                limit: 255
-    t.string   "token",                    limit: 255
+    t.string   "user_type",                     limit: 255
+    t.string   "token",                         limit: 255
     t.boolean  "hide_file_tree"
     t.boolean  "allow_file_creation"
-    t.boolean  "allow_auto_completion",                default: false
-    t.integer  "expected_difficulty",                  default: 1
+    t.boolean  "allow_auto_completion",                     default: false
+    t.integer  "expected_difficulty",                       default: 1
+    t.boolean  "default_execution_environment",             default: false
   end
 
   create_table "exercises_proxy_exercises", id: false, force: :cascade do |t|
