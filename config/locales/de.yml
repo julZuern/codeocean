@@ -11,6 +11,7 @@ de:
       error:
         message: Nachricht
       execution_environment:
+        default_programming_language: Standard für Programmiersprache?
         docker_image: Docker-Image
         exposed_ports: Zugängliche Ports
         file_type: Standard-Dateityp
@@ -21,6 +22,7 @@ de:
         name: Name
         permitted_execution_time: Erlaubte Ausführungszeit (in Sekunden)
         pool_size: Docker-Container-Pool-Größe
+        programming_language: Programmiersprache
         run_command: Ausführungsbefehl
         test_command: Testbefehl
         testing_framework: Testing-Framework
@@ -368,10 +370,8 @@ de:
       no_header: "Authorization header fehlt"
       no_token: "Kein Token im Authorization header"
       unknown_token: "Unbekanntes OAuth2 Token"
-    default_execution_environment_warning: |
-      Für die Programmiersprache der Aufgabe wurde keine passende Ausführungsumgebung gefunden.
-      Vermutlich haben Sie eine Übung für eine nicht unterstützte Programmiersprache importiert.
-      Die Standardausführungsumgebung wurde gewählt, bitte wählen Sie die richtige Ausführungsumgebung oder entfernen Sie die Aufgabe.
+    no_execution_environment_warning: "Bitte wählen Sie eine Ausführungsumgebung:"
+    please_choose: "Bitte wählen:"
   proxy_exercises:
       index:
         clone: Duplizieren
@@ -618,6 +618,7 @@ de:
     message_failure: Leider ist ein Fehler auf unserer Plattform aufgetreten. Bitte probieren Sie es später noch einmal.
     new: Hinzufügen
     new_model: '%{model} hinzufügen'
+    no: Nein
     number: Nummer
     object_cloned: '%{model} wurde erfolgreich dupliziert.'
     object_created: '%{model} wurde erfolgreich erstellt.'
@@ -634,6 +635,7 @@ de:
     upload_file: Datei hochladen
     time:
       before: "%{time} zuvor"
+    yes: Ja
   submissions:
     causes:
       autosave: Autosave
