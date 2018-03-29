@@ -165,6 +165,10 @@ a.file-heading {
     }
   }
 }
+.prog-lang-form{
+  display: inline-block;
+  width: 100%;
+}
 
 .placeholder {
   padding: 0;
@@ -179,5 +183,8 @@ a.file-heading {
     height: 30px;
     width: 60px;
     text-align: center;
+  }
+  input {
+    visibility: visible;
   }
 }
